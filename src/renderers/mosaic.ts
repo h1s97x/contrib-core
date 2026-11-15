@@ -129,7 +129,7 @@ export const mosaicRenderer: Renderer = {
         height,
         xmlns: "http://www.w3.org/2000/svg",
       }).replace("/>", ">"),
-      "<desc>Generated with https://github.com/h1s97x/contrib-snake (mosaic skin)</desc>",
+      "<desc>Generated with https://github.com/h1s97x/contrib-core (mosaic skin)</desc>",
       '<defs><linearGradient id="m-shimmer" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ffffff" stop-opacity="0"/><stop offset="50%" stop-color="#ffffff" stop-opacity="0.16"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient></defs>',
       `<style>${minifyCss(styles)}</style>`,
       h("rect", { class: "bg", x: left, y: top, width, height }),

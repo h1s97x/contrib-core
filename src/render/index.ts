@@ -106,7 +106,7 @@ export const createSvg = (
     }).replace("/>", ">"),
 
     "<desc>",
-    "Generated with https://github.com/h1s97x/contrib-snake",
+    "Generated with https://github.com/h1s97x/contrib-core",
     "</desc>",
 
     "<style>",

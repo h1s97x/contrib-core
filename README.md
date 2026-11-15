@@ -16,33 +16,25 @@ the eight arcade games are one group, `mosaic` is another, and `contrib-tree` /
 way. See [Integrating other contrib projects](#integrating-other-contrib-projects).
 
 Canonical repository: `h1s97x/plugins/contrib-core` (CNB). The GitHub mirror
-`h1s97x/contrib-core` is what the shells' `uses:` lines point at; it must be
-created separately (this environment has no GitHub credentials).
+`h1s97x/contrib-core` is what the shells' `uses:` lines point at.
 
-This repository is **not** a shell. The snake shell is
-`contrib-arcade-snake`, renamed from the existing `contrib-snake` repository.
+This repository is **not** a shell. The snake distribution channel is
+`contrib-arcade-snake`.
 See [Architecture](#architecture-core--thin-shells).
 
 <picture>
-  <source
-    media="(prefers-color-scheme: dark)"
-    srcset="https://raw.githubusercontent.com/h1s97x/h1s97x/main/snake-dark.svg"
-  />
-  <source
-    media="(prefers-color-scheme: light)"
-    srcset="https://raw.githubusercontent.com/h1s97x/h1s97x/main/snake.svg"
-  />
+  <source media="(prefers-color-scheme: dark)" srcset="./demo-dark.svg" />
   <img
-    alt="github contribution grid snake animation"
-    src="https://raw.githubusercontent.com/h1s97x/h1s97x/main/snake.svg"
+    alt="contribution grid snake animation (offline sample)"
+    src="./demo.svg"
   />
 </picture>
 
 Pull a user's contribution graph and write it as an animated
-[svg](https://raw.githubusercontent.com/h1s97x/h1s97x/main/snake.svg). The
-default skin plays a snake game over the cells; `mosaic` turns the very same
-cells into a finished-looking picture. Colors can be customized via the
-`outputs` option.
+[svg](./demo.svg). The default skin plays a snake game over the cells;
+`mosaic` turns the very same cells into a finished-looking picture. Colors
+can be customized via the `outputs` option. Both previews above are
+committed to this repository — see [Generated artifacts](#generated-artifacts).
 
 ## Supported platforms
 
@@ -336,9 +328,28 @@ palettes and multi-platform groundwork now live here. Replace the plugin image
 with `docker.cnb.cool/h1s97x/plugins/contrib-core:latest`; all `settings` keys
 stay valid.
 
-`contrib-snake` is being renamed to `contrib-arcade-snake` on both CNB and
-GitHub; old slugs may still redirect. Shells reference the core mirror
-`h1s97x/contrib-core@main`, not the old `h1s97x/contrib-snake`.
+Shells are read-only distribution channels generated from `templates/shell/`;
+they reference an immutable core tag (currently
+`h1s97x/contrib-core@v3.6.0`), not `main`.
+
+## Generated artifacts
+
+`demo.svg` and `demo-dark.svg` are committed previews rendered from a fixed,
+deterministic 53×7 sample grid. No platform API call or token is needed. Each
+of the eight shells carries its own `<game>.svg` / `<game>-dark.svg` pair too.
+
+```bash
+bun run demo          # regenerate demo.svg / demo-dark.svg here
+bun run demo:shells   # regenerate the 8 shell preview pairs
+```
+
+## Verification
+
+`npx tsc --noEmit`, `prettier -c` and 86 offline `bun test` cases pass. Every
+shell is smoke-checked with `bun run verify:shells`: both SVGs exist, the first
+frame keeps all 371 cells, README links are local, and `action.yml` pins an
+immutable core tag. Running these checks is part of the `tag_push` publish
+pipeline.
 
 ## Implementation
 

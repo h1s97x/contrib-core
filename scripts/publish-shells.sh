@@ -31,6 +31,16 @@ npx -y bun scripts/scaffold-shells.ts --core-ref="$CORE_REF" >/dev/null || {
   exit 1
 }
 
+# 为每个壳生成仓库自身的预览 SVG，并在推送前逐壳冒烟
+npx -y bun scripts/render-demo.ts --out=shells --shells >/dev/null || {
+  echo "::error::demo rendering failed" >&2
+  exit 1
+}
+npx -y bun scripts/verify-shells.ts --out=shells || {
+  echo "::error::shell verification failed" >&2
+  exit 1
+}
+
 cnb_auth=""
 if [ -n "${CNB_TOKEN:-}" ]; then
   cnb_auth="Authorization: Basic $(printf '%s' "${CNB_TOKEN_USER_NAME:-cnb}:$CNB_TOKEN" | base64 -w0)"

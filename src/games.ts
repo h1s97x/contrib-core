@@ -88,7 +88,7 @@ export const pendingGameNames = (arcadeGames as readonly GameMeta[])
   .filter((g) => g.status === "planned")
   .map((g) => g.name);
 
-/** 需要新建仓库的壳；snake 由现有 contrib-snake 改名而来，不新建。 */
+/** 需要独立分发仓库的壳清单；由 publish-shells.sh 按 tag 发布。 */
 export const newShellNames = (shellTargets as readonly GameMeta[])
   .filter((g) => g.name !== "snake")
   .map((g) => g.shellRepo.split("/").at(-1)!);

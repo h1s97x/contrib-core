@@ -8,6 +8,17 @@
 
 {{SUMMARY}}
 
+## Preview
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./{{GAME}}-dark.svg" />
+  <img alt="{{LABEL}} preview" src="./{{GAME}}.svg" />
+</picture>
+
+`{{GAME}}.svg` and `{{GAME}}-dark.svg` are committed previews rendered offline
+from a fixed 53×7 sample grid by `contrib-core`; no API token is needed to view
+them. Regenerate with `bun run demo:shells` in the core repo.
+
 CNB: `{{SHELL_CNB_PATH}}`. GitHub mirror: `{{SHELL_REPO}}`. {{MIRROR_NOTE}}
 `action.yml` points at the core mirror `{{CORE_REPO}}`, which must exist before
 this shell's workflow can run.
@@ -32,17 +43,19 @@ Everything else from the core Action works here too: `platform`, `user_name`,
 `github_token` and the per-output query options (`palette`, `color_dots`,
 `color_snake`, `renderer`). See the [core README]({{CORE_URL}}#readme).
 
-## Why a separate repository
+## Why a separate channel
 
-One repo per game means its own issues, README, preview, release cadence and
-maintainers. Someone can be given write access to just this game's shell
-without touching the other seven. Upgrades still happen once, in the core.
+Each game gets its own Marketplace listing, `uses:` path, version tag and
+README. This repository is a **read-only** artifact generated from
+`templates/shell/` in the core: open issues and pull requests in
+`contrib-core`. Upgrades happen once in the core and are published to every
+channel by `publish-shells.sh`.
 
 ## Forking
 
 Fork this repo to change branding, default outputs, issue templates or
 maintainers without touching game logic. To use your own core, edit the `uses:`
-line in `action.yml` from `{{CORE_REPO}}@main` to your fork and ref.
+line in `action.yml` from `{{CORE_REPO}}@{{CORE_REF}}` to your fork and ref.
 
 To change how the game actually plays, open a PR against the core renderer in
 [{{CORE_REPO}}]({{CORE_URL}}) instead — every shell picks up the change
@@ -50,9 +63,10 @@ automatically.
 
 ## Regenerating
 
-This shell was produced by `bun run scaffold` in the core repo. To keep all
-shells in sync, change `templates/shell/` there and re-run it, rather than
-editing generated files by hand.
+This shell was produced by `bun run scaffold` (plus `bun run demo:shells`
+for the previews) in the core repo. To keep all shells in sync, change
+`templates/shell/` there and re-run it, rather than editing generated files
+by hand.
 
 ## License
 

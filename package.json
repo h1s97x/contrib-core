@@ -18,6 +18,9 @@
     "type": "tsc",
     "lint": "prettier -c 'src/**/*.{ts,js,json,md,yml,yaml}' 'scripts/**/*.ts'",
     "scaffold": "bun scripts/scaffold-shells.ts",
+    "demo": "bun scripts/render-demo.ts --out=. --game=snake --prefix=demo",
+    "demo:shells": "bun scripts/render-demo.ts --out=shells --shells",
+    "verify:shells": "bun scripts/verify-shells.ts",
     "publish": "bash scripts/publish-shells.sh"
   }
 }
