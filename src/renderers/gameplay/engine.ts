@@ -248,7 +248,7 @@ export const renderGameplay = (
       height,
       xmlns: "http://www.w3.org/2000/svg",
     }).replace("/>", ">"),
-    `<desc>Generated with https://github.com/h1s97x/contrib-arcade-core (${name} gameplay, rules reimplemented from scratch)</desc>`,
+    `<desc>Generated with https://github.com/h1s97x/contrib-core (${name} gameplay, rules reimplemented from scratch)</desc>`,
     `<style>${minifyCss(css)}</style>`,
     ...elements,
     "</svg>",

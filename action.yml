@@ -1,5 +1,5 @@
-name: "contribution-graph-arcade-core"
-description: "Core renderer used by the eight thin game shells; games: snake + 7 planned, skins: mosaic"
+name: "contribution-graph-core"
+description: "Core runtime for contribution-graph SVGs (GitHub / CNB / GitLab); any contrib renderer can plug in"
 author: "h1s97x"
 
 inputs:
@@ -8,10 +8,10 @@ inputs:
     required: false
     default: github
   renderer:
-    description: "game or skin: snake (default) | mosaic; planned games are listed in src/games.ts. Can also be set per output with ?renderer="
+    description: "renderer name (arcade game or artistic skin). Can also be set per output with ?renderer="
     required: false
   game:
-    description: "alias of renderer, for thin shells that fix one game per repo"
+    description: "legacy alias of renderer, kept for the arcade thin shells"
     required: false
   user_name:
     description: "user name on the selected platform"
@@ -48,10 +48,10 @@ inputs:
 
        supported query string options:
 
-      - renderer:     Game/skin for this file: snake (default) | mosaic. Overrides the renderer/game input for this output.
+      - renderer:     Renderer for this file (e.g. snake, breakout, mosaic). Overrides the renderer/game input.
       - game:         Alias of renderer.
       - palette:      A preset of color, e.g. github, github-dark, cnb-dark, gitlab-dark, mosaic
-      - color_snake:  Color of the snake
+      - color_snake:  Color of the moving actor
       - color_dots:   Coma separated list of dots color.
                       The first one is 0 contribution, then it goes from the low contribution to the highest.
                       Exactly 5 colors are expected.

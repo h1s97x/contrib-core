@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving **contrib-arcade-core**! This document
+Thanks for your interest in improving **contrib-core**! This document
 explains how to set up a development environment, run the project, and what to
 expect when you open an issue or a pull request.
 
@@ -70,28 +70,38 @@ bun src/cli.ts
 - `action.yml` — GitHub Action definition.
 - `Dockerfile`, `entrypoint.sh` — CNB Docker plugin.
 
-## Adding a renderer
+## Adding a renderer (any contrib project)
 
-Add `src/renderers/<name>.ts` exporting a `Renderer` whose `createSvg` reads the
-shared `RenderContext` (`grid`, `cells`, lazy `getSnakeChain()`), register it in
-`src/renderers/index.ts`, and add a `<name>-light` / `<name>-dark` palette if the
-skin needs its own colors. Cover the new skin with an offline test in
-`src/__tests__/`. Skins that do not call `getSnakeChain()` skip the solver.
+Add `src/renderers/<name>.ts` exporting a `Renderer` and register it in
+`src/renderers/index.ts`. The contract is small:
 
-## Adding a game
+- `RenderContext` gives you `grid` and `cells`. `getSnakeChain()` is optional —
+  only the `snake` skin needs the solver.
+- `Renderer` needs `name`, `createSvg(context, options) => string`, and an
+  optional `defaultPalette` if it ships its own colors (see `mosaic`).
+- `RenderOptions` carries `drawOptions`, `animationOptions` and `paletteName`.
 
-The eight arcade games are declared in `src/games.ts` — the single source of
-truth for names, labels and `ready` / `planned` status. To add a ninth:
+For grid-based output, `renderGameplay()` in `src/renderers/gameplay/` compiles
+a `Gameplay` (frames + cell events + actor tracks) into a complete SVG. For
+non-grid output (3D, tree, sequencer), just build your own SVG string —
+`mosaic` does exactly that. Cover it with an offline test in `src/__tests__/`.
 
-1. Add one entry to `arcadeGames` with `status: "planned"`.
-2. Implement `src/renderers/<name>.ts` and register it in
-   `src/renderers/index.ts`, then flip the status to `ready`.
+`src/games.ts` (`shellTargets`) is a **distribution list**, not the renderer
+catalog: it only says which games get their own thin-shell repo. Registering a
+renderer from any other contrib project does not require touching it.
+
+## Adding an arcade game shell
+
+To give a ninth arcade game its own repository:
+
+1. Add one entry to `shellTargets` with `status: "planned"`.
+2. Implement `src/renderers/gameplay/simulations.ts` + register the renderer,
+   then flip the status to `ready`.
 3. Run `bun run scaffold` — a new thin shell is generated automatically.
 4. Cover the renderer with an offline test in `src/__tests__/`.
 
 Game rules are re-implemented from scratch; do not copy third-party source.
-`mosaic` is deliberately not in `arcadeGames`: it is an artistic skin, not a
-game.
+`mosaic` is deliberately not in `shellTargets`: it is a skin, not a game.
 
 ## Adding a platform
 
@@ -101,8 +111,8 @@ adapter with an offline test in `src/__tests__/`.
 
 ## Repository sync
 
-CNB (`h1s97x/plugins/contrib-arcade-core`) is the source of truth; GitHub
-(`h1s97x/contrib-arcade-core`) is the mirror for the Action / Marketplace.
+CNB (`h1s97x/plugins/contrib-core`) is the source of truth; GitHub
+(`h1s97x/contrib-core`) is the mirror for the Action / Marketplace.
 
 - **CNB → GitHub**: `.cnb.yml` `main.push` syncs on every push (credentials come
   from the `h1s97x/secret-env` key repository).
@@ -111,7 +121,7 @@ CNB (`h1s97x/plugins/contrib-arcade-core`) is the source of truth; GitHub
   with `repo-code:rw` (_Settings → Secrets and variables → Actions_); without it
   the workflow skips with a notice instead of failing.
 - **Plugin image**: pushing a tag runs the `tag_push` pipeline in `.cnb.yml` and
-  publishes `docker.cnb.cool/h1s97x/plugins/contrib-arcade-core:latest`.
+  publishes `docker.cnb.cool/h1s97x/plugins/contrib-core:latest`.
 
 ## Contribution policy
 

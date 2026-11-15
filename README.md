@@ -1,22 +1,27 @@
-# contrib-arcade-core
+# contrib-core
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/h1s97x/contrib-arcade-core/main.yml?label=action&style=flat-square)](https://github.com/h1s97x/contrib-arcade-core/actions/workflows/main.yml)
-[![GitHub release](https://img.shields.io/github/release/h1s97x/contrib-arcade-core.svg?style=flat-square)](https://github.com/h1s97x/contrib-arcade-core/releases/latest)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/h1s97x/contrib-core/main.yml?label=action&style=flat-square)](https://github.com/h1s97x/contrib-core/actions/workflows/main.yml)
+[![GitHub release](https://img.shields.io/github/release/h1s97x/contrib-core.svg?style=flat-square)](https://github.com/h1s97x/contrib-core/releases/latest)
 ![type definitions](https://img.shields.io/npm/types/typescript?style=flat-square)
 ![code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
 
-The **core** repository: the only place with game code. It turns a contribution
-grid into an animated SVG, owns the platform adapters (**GitHub**, **CNB**,
-**GitLab**), palettes, the renderer registry, CLI, Action, CNB plugin, CI and
-the templates that generate the eight thin game shells.
+The **core** repository: a general runtime that turns a contribution grid into
+an animated SVG. It owns the platform adapters (**GitHub**, **CNB**, **GitLab**),
+palettes, the renderer registry, CLI, Action, CNB plugin, CI and the templates
+that generate thin shells.
 
-Canonical repository: `h1s97x/plugins/contrib-arcade-core` (CNB). The GitHub
-mirror `h1s97x/contrib-arcade-core` is what the shells' `uses:` lines point at;
-it must be created separately (this environment has no GitHub credentials).
+**It is not arcade-specific.** Any contrib project can plug in a `Renderer`:
+the eight arcade games are one group, `mosaic` is another, and `contrib-tree` /
+`contrib-3d` / `contrib-sequencer` / `contrib-space-invaders` can join the same
+way. See [Integrating other contrib projects](#integrating-other-contrib-projects).
 
-This repository is **not** a game shell. The existing
-`h1s97x/plugins/contrib-snake` repository is the `snake` shell. See
-[Architecture](#architecture-core--thin-shells).
+Canonical repository: `h1s97x/plugins/contrib-core` (CNB). The GitHub mirror
+`h1s97x/contrib-core` is what the shells' `uses:` lines point at; it must be
+created separately (this environment has no GitHub credentials).
+
+This repository is **not** a shell. The snake shell is
+`contrib-arcade-snake`, renamed from the existing `contrib-snake` repository.
+See [Architecture](#architecture-core--thin-shells).
 
 <picture>
   <source
@@ -76,23 +81,23 @@ outputs: |
 
 ## Architecture: core + thin shells
 
-This repository is the **core** — the only place with game code. The eight
+This repository is the **core** — the only place with renderer code. The eight
 **thin shells** are generated from `templates/shell/`: each is a separate
 repository with its own README, issues, preview and maintainers, but fixes one
-`renderer` and forwards everything else to the core Action. No game logic is
-duplicated. The existing `h1s97x/plugins/contrib-snake` repository is the
-`snake` shell; it no longer contains any core source.
+`renderer` and forwards everything else to the core Action. No rendering logic
+is duplicated. The snake shell is `contrib-arcade-snake`, renamed from the
+existing `contrib-snake` repository; it no longer contains any core source.
 
-| Game          | Shell repo (CNB)                          | Status  |
-| ------------- | ----------------------------------------- | ------- |
-| Pac-Man       | `h1s97x/plugins/arcade-pacman`            | ready   |
-| Breakout      | `h1s97x/plugins/arcade-breakout`          | ready   |
-| Galaga        | `h1s97x/plugins/arcade-galaga`            | ready   |
-| Puzzle Bobble | `h1s97x/plugins/arcade-puzzle-bobble`     | ready   |
-| Bomberman     | `h1s97x/plugins/arcade-bomberman`         | ready   |
-| Minesweeper   | `h1s97x/plugins/arcade-minesweeper`       | ready   |
-| Snake         | `h1s97x/plugins/contrib-snake` (existing) | ready   |
-| Tetris        | `h1s97x/plugins/arcade-tetris`            | ready   |
+| Game          | Shell repo (CNB)                                | Status |
+| ------------- | ----------------------------------------------- | ------ |
+| Pac-Man       | `h1s97x/plugins/contrib-arcade-pacman`          | ready  |
+| Breakout      | `h1s97x/plugins/contrib-arcade-breakout`        | ready  |
+| Galaga        | `h1s97x/plugins/contrib-arcade-galaga`          | ready  |
+| Puzzle Bobble | `h1s97x/plugins/contrib-arcade-puzzle-bobble`   | ready  |
+| Bomberman     | `h1s97x/plugins/contrib-arcade-bomberman`       | ready  |
+| Minesweeper   | `h1s97x/plugins/contrib-arcade-minesweeper`     | ready  |
+| Snake         | `h1s97x/plugins/contrib-arcade-snake`           | ready  |
+| Tetris        | `h1s97x/plugins/contrib-arcade-tetris`          | ready  |
 
 `mosaic` stays a skin in the core rather than becoming a ninth shell.
 
@@ -105,18 +110,53 @@ bun scripts/scaffold-shells.ts --out=/tmp/shells --owner=<your-name>
 
 `scripts/create-shell-repos.sh` creates the core repo plus the seven new shell
 repos on CNB and pushes their initial contents. It needs a `CNB_TOKEN` with
-`group-resource:rw`: the pipeline token currently has only `repo-code` scope and
-gets `403 / errcode 10023`, so run it with a properly scoped token or after
-`cnb login`. The GitHub mirror `h1s97x/contrib-arcade-core` must exist before
-the shells' `uses:` lines resolve.
+`group-resource:rw`. The snake repo is renamed rather than recreated, and the
+GitHub mirror `h1s97x/contrib-core` must exist before the shells' `uses:` lines
+resolve.
 
 Two things make this cheap to extend:
 
-- **Ninth game**: add one line to `src/games.ts`, implement its renderer, and
-  re-run `bun run scaffold`. A new shell appears automatically.
-- **Upgrade all shells**: change `templates/shell/` once and re-run. No need to
-  edit eight repositories, and a fork only has to change the `uses:` line in its
-  own `action.yml` to point at a different core.
+- **New renderer**: implement `src/renderers/<name>.ts` and register it. Add a
+  line to `shellTargets` only if it also needs its own repo, then re-run
+  `bun run scaffold`.
+- **Upgrade all shells**: change `templates/shell/` once and re-run. A fork only
+  has to change the `uses:` line in its own `action.yml`.
+
+## Integrating other contrib projects
+
+core is not limited to the eight arcade games. Two paths:
+
+- **Light** — keep your project's own repo and reference the core Action from
+  its workflow with your `renderer` name. You reuse the three platform
+  adapters, CLI, Action/CNB plugin, `outputs` parsing and light/dark themes.
+  The renderer still has to be registered in `src/renderers/index.ts`.
+- **Deep** — move the rendering logic into `src/renderers/<name>.ts` as a
+  `Renderer` and let your old repo become a thin shell. `mosaic` already does
+  this without being a game.
+
+The contract:
+
+| Type | What it gives you |
+| ---- | ----------------- |
+| `RenderContext` | `grid` + `cells`; `getSnakeChain()` is optional and only `snake` uses it |
+| `Renderer` | `name`, optional `defaultPalette`, `createSvg(context, options) => string` |
+| `RenderOptions` | `drawOptions`, `animationOptions`, `paletteName` |
+
+For grid-based output, `renderGameplay()` in `src/renderers/gameplay/` compiles
+a `Gameplay` (frames + cell events + actor tracks) into a complete SVG with a
+finished static first frame. For non-grid output (isometric 3D, a tree, a
+sequencer), return your own SVG from `createSvg` instead — `mosaic` does that.
+
+`src/games.ts` (`shellTargets`) is **not** the renderer catalog; it only lists
+which games get their own shell repo. Registering a renderer from any other
+contrib project needs no change there. That keeps one `contrib-` namespace:
+
+```
+contrib-core                                  runtime (data / registry / CLI / CI)
+contrib-arcade-<game> × 8                     arcade game shells
+contrib-tree / -3d / -sequencer / -space-invaders / -pacman   existing projects
+contrib-<name>                                future skins
+```
 
 Game rules are re-implemented from scratch; no third-party game source is
 copied into this project.
@@ -143,7 +183,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: generate snake svg
-        uses: h1s97x/contrib-arcade-core@main
+        uses: h1s97x/contrib-core@main
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
@@ -163,7 +203,7 @@ To render every output with the same non-default skin, set the action input
 instead of repeating the query string on each line:
 
 ```yaml
-- uses: h1s97x/contrib-arcade-core@main
+- uses: h1s97x/contrib-core@main
   with:
     github_user_name: ${{ github.repository_owner }}
     renderer: mosaic
@@ -176,7 +216,7 @@ The same action works for the other platforms — set `platform` and pass the
 matching token, for example:
 
 ```yaml
-- uses: h1s97x/contrib-arcade-core@main
+- uses: h1s97x/contrib-core@main
   with:
     platform: gitlab
     user_name: my-gitlab-user
@@ -201,7 +241,7 @@ Then embed it in your `README.md`:
 ### CNB pipeline plugin
 
 This repository also builds a CNB Docker plugin. Pushing a tag publishes
-`docker.cnb.cool/h1s97x/plugins/contrib-arcade-core:latest` automatically:
+`docker.cnb.cool/h1s97x/plugins/contrib-core:latest` automatically:
 
 ```yaml
 main:
@@ -209,7 +249,7 @@ main:
     - name: contribution-snake
       stages:
         - name: generate
-          image: docker.cnb.cool/h1s97x/plugins/contrib-arcade-core:latest
+          image: docker.cnb.cool/h1s97x/plugins/contrib-core:latest
           settings:
             theme: both
             output: snake.svg
@@ -293,13 +333,12 @@ generate `?palette=mosaic-dark` only if you prefer the two-file `<picture>` form
 
 `h1s97x/plugins/cnb-snake` is archived: its CNB data source, plugin entrypoint,
 palettes and multi-platform groundwork now live here. Replace the plugin image
-with `docker.cnb.cool/h1s97x/plugins/contrib-arcade-core:latest`; all `settings` keys
+with `docker.cnb.cool/h1s97x/plugins/contrib-core:latest`; all `settings` keys
 stay valid.
 
-Both repositories are now named `contrib-snake`: `h1s97x/plugins/contrib-snake`
-on CNB and `h1s97x/contrib-snake` on GitHub; old slugs still redirect. The Action
-reference `h1s97x/contrib-arcade-core@main` and the badges above point at the renamed
-GitHub mirror.
+`contrib-snake` is being renamed to `contrib-arcade-snake` on both CNB and
+GitHub; old slugs may still redirect. Shells reference the core mirror
+`h1s97x/contrib-core@main`, not the old `h1s97x/contrib-snake`.
 
 ## Implementation
 

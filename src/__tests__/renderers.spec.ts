@@ -87,12 +87,12 @@ it("keeps the snake svg byte-identical through the registry", () => {
   const direct = createSvg(
     grid,
     cells,
-    context.getSnakeChain(),
+    context.getSnakeChain!(),
     snakeDrawOptions,
     animationOptions,
   );
   expect(viaRegistry).toBe(direct);
-  expect(context.getSnakeChain()).toBe(context.getSnakeChain());
+  expect(context.getSnakeChain!()).toBe(context.getSnakeChain!());
 });
 
 it("renders every cell on the first frame with only light motion", () => {

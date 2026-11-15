@@ -35,7 +35,7 @@ export const resolveRenderer = (name?: string): RendererName => {
   const value = (name ?? "").trim().toLowerCase() || "snake";
   if (pendingGameNames.includes(value))
     throw new Error(
-      `game "${value}" is registered but not implemented yet; add src/renderers/gameplay/ and register it in src/renderers/index.ts`,
+      `renderer "${value}" is registered but not implemented yet; add its Renderer and register it in src/renderers/index.ts`,
     );
   const planned = pendingGameNames.length
     ? `; planned games: ${pendingGameNames.join(" | ")}`

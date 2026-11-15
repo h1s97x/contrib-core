@@ -32,7 +32,7 @@ jobs:
           set -e
           auth="Authorization: Basic $(printf '%s' "cnb:${CNB_TOKEN}" | base64 -w0)"
           git -c http.extraHeader="$auth" clone \
-            https://cnb.cool/h1s97x/plugins/contrib-arcade-core.git cnb-dst
+            https://cnb.cool/h1s97x/plugins/contrib-core.git cnb-dst
           cd cnb-dst
 
           # 排除 .git/.github/.cnb*，只回灌代码与文档

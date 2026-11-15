@@ -1,19 +1,28 @@
 #!/usr/bin/env bash
 # 一次性创建 core 仓库 + 7 个新薄壳仓库，并推送初始内容。
-# snake 壳复用已有的 h1s97x/plugins/contrib-snake，不在这里创建。
+# snake 壳由现有 h1s97x/plugins/contrib-snake 改名为 contrib-arcade-snake，
+# 不在这里新建；CNB CLI 不支持改名，需网页操作或删除重建。
 #
 # 前置条件：
 #   1. CNB_TOKEN 具备 group-resource:rw（创建仓库）与 repo-code:rw（推送）。
-#      当前流水线注入的 token 缺少 group-resource:rw，会返回 403 / errcode 10023。
-#      在 CNB「设置 → 访问令牌」补权限后重跑，或用 `cnb login` 换个人凭证。
 #   2. 先在本目录跑 `bun run scaffold` 生成 shells/。
-#   3. GitHub 镜像 h1s97x/contrib-arcade-core 需另行创建（本环境无 GitHub 凭据），
-#      否则薄壳 action.yml 里的 `uses:` 暂时无法解析。
+#   3. GitHub 镜像 h1s97x/contrib-core 与 8 个 h1s97x/contrib-arcade-*
+#      需另行创建（本环境无 GitHub 凭据），否则壳的 `uses:` 无法解析。
 set -euo pipefail
 
 GROUP="h1s97x/plugins"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SHELLS="$ROOT/shells"
+CORE_NAME="contrib-core"
+SHELL_NAMES=(
+  contrib-arcade-pacman
+  contrib-arcade-breakout
+  contrib-arcade-galaga
+  contrib-arcade-puzzle-bobble
+  contrib-arcade-bomberman
+  contrib-arcade-minesweeper
+  contrib-arcade-tetris
+)
 
 # create-repo 成功时响应体为空，cnb CLI 会打印 JSON 解析错误但仓库已建成，
 # 因此不依赖它的退出码，统一用 get-by-id 复核。
@@ -61,20 +70,20 @@ push_repo() {
   echo "  ✓ pushed $GROUP/$name"
 }
 
-create_repo "contrib-arcade-core" \
-  "Core renderers, data sources and CI for the contribution-graph arcade shells"
-for game in pacman breakout galaga puzzle-bobble bomberman minesweeper tetris; do
-  create_repo "arcade-$game" "Thin shell for the $game contribution-graph game"
+create_repo "$CORE_NAME" \
+  "Core runtime for contribution-graph SVGs; any contrib project can plug in a renderer"
+for name in "${SHELL_NAMES[@]}"; do
+  create_repo "$name" "Thin shell over ${CORE_NAME}"
 done
 
 echo
 echo "▸ pushing contents"
-push_repo "$ROOT" "contrib-arcade-core" "init: contribution-graph arcade core"
-for game in pacman breakout galaga puzzle-bobble bomberman minesweeper tetris; do
-  push_repo "$SHELLS/arcade-$game" "arcade-$game" "init: $game thin shell"
+push_repo "$ROOT" "$CORE_NAME" "init: contribution-graph core"
+for name in "${SHELL_NAMES[@]}"; do
+  push_repo "$SHELLS/$name" "$name" "init: $name thin shell"
 done
 
 echo
 echo "Done. Remember to:"
-echo "  - create the GitHub mirror h1s97x/contrib-arcade-core"
-echo "  - replace h1s97x/plugins/contrib-snake with shells/arcade-snake/"
+echo "  - rename h1s97x/plugins/contrib-snake -> contrib-arcade-snake (CNB + GitHub)"
+echo "  - create the GitHub mirrors h1s97x/contrib-core and h1s97x/contrib-arcade-*"

@@ -57,6 +57,7 @@ const vars = (t: Theme) =>
  */
 export const mosaicRenderer: Renderer = {
   name: "mosaic",
+  defaultPalette: "mosaic",
   createSvg: (context, { drawOptions, paletteName }) => {
     const { grid } = context;
     const { sizeCell } = drawOptions;

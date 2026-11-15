@@ -1,6 +1,6 @@
 import { palettes } from "./palettes";
 import type { DrawOptions } from "./render/index";
-import { resolveRenderer, type RendererName } from "./renderers";
+import { renderers, resolveRenderer, type RendererName } from "./renderers";
 import type { AnimationOptions } from "./renderers/types";
 
 export type { AnimationOptions } from "./renderers/types";
@@ -48,9 +48,9 @@ export const parseEntry = (
   const renderer = resolveRenderer(
     sp.get("renderer") ?? sp.get("game") ?? defaultRenderer,
   );
-  // 皮肤自带默认色板；显式 palette 始终优先
+  // 色板由 renderer 自己声明，不需要在这里为每种皮肤写特判
   const paletteName =
-    sp.get("palette") ?? (renderer === "mosaic" ? "mosaic" : defaultPalette);
+    sp.get("palette") ?? renderers[renderer].defaultPalette ?? defaultPalette;
 
   const drawOptions: DrawOptions = {
     sizeDotBorderRadius: 0,

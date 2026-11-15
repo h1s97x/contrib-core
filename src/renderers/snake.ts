@@ -8,7 +8,7 @@ export const snakeRenderer: Renderer = {
     createSvg(
       context.grid,
       context.cells,
-      context.getSnakeChain(),
+      context.getSnakeChain!(),
       drawOptions,
       animationOptions,
     ),

@@ -8,6 +8,7 @@ export {
   gameNames,
   getGame,
   pendingGameNames,
+  shellTargets,
 } from "./games";
 export type { GameMeta, GameName, GameStatus } from "./games";
 export { parseEntry, parseOutputsOption } from "./outputsOptions";
