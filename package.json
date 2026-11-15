@@ -1,0 +1,22 @@
+{
+  "name": "contrib-arcade-core",
+  "description": "Core for animated contribution-graph SVGs (GitHub / CNB / GitLab): games, skins, CLI, Action and CNB plugin",
+  "version": "3.5.0",
+  "private": true,
+  "repository": "https://cnb.cool/h1s97x/plugins/contrib-arcade-core",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.4",
+    "@types/node": "24.12.2",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "type": "tsc",
+    "lint": "prettier -c 'src/**/*.{ts,js,json,md,yml,yaml}' 'scripts/**/*.ts'",
+    "scaffold": "bun scripts/scaffold-shells.ts"
+  }
+}

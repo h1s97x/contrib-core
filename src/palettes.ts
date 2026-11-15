@@ -1,0 +1,100 @@
+export const basePalettes = {
+  "github-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#1b1f230a",
+    colorDots: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+    colorEmpty: "#ebedf0",
+    colorSnake: "purple",
+  },
+  "github-dark": {
+    colorBackground: "#0c1116",
+    colorDotBorder: "#1b1f230a",
+    colorEmpty: "#161b22",
+    colorDots: ["#161b22", "#01311f", "#034525", "#0f6d31", "#00c647"],
+    colorSnake: "purple",
+  },
+  "cnb-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#e5e7eb",
+    colorDots: ["#e5e7eb", "#bfdbfe", "#60a5fa", "#2563eb", "#1e3a8a"],
+    colorSnake: "#1e3a8a",
+  },
+  "cnb-dark": {
+    colorBackground: "#0d1117",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#21262d",
+    colorDots: ["#21262d", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    colorSnake: "#39d353",
+  },
+  "gitlab-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#edebe6",
+    colorDots: ["#edebe6", "#9dc7f1", "#428fdc", "#2f68b4", "#284779"],
+    colorSnake: "#284779",
+  },
+  "gitlab-dark": {
+    colorBackground: "#1f1e24",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#2a2a36",
+    colorDots: ["#2a2a36", "#284779", "#2f68b4", "#428fdc", "#9dc7f1"],
+    colorSnake: "#9dc7f1",
+  },
+  "forgejo-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#d4d4d8",
+    colorDots: ["#d4d4d8", "#fdba74", "#f97316", "#c2410c", "#7c2d12"],
+    colorSnake: "#7c2d12",
+  },
+  "forgejo-dark": {
+    colorBackground: "#1f2937",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#2b3642",
+    colorDots: ["#2b3642", "#9a3412", "#ea580c", "#fb923c", "#fed7aa"],
+    colorSnake: "#fed7aa",
+  },
+  "codeberg-light": {
+    colorBackground: "#ffffff",
+    colorDotBorder: "#00000010",
+    colorEmpty: "#d0d7de",
+    colorDots: ["#d0d7de", "#8db5dc", "#679cd0", "#4183c4", "#254f77"],
+    colorSnake: "#254f77",
+  },
+  "codeberg-dark": {
+    colorBackground: "#161b22",
+    colorDotBorder: "#ffffff10",
+    colorEmpty: "#3b444a",
+    colorDots: ["#3b444a", "#254f77", "#31699f", "#4183c4", "#8db5dc"],
+    colorSnake: "#8db5dc",
+  },
+  // mosaic 皮肤的低饱和柔和色板；colorSnake 在该皮肤下仅作为占位
+  "mosaic-light": {
+    colorBackground: "#fbfaf7",
+    colorDotBorder: "#2f4f430d",
+    colorEmpty: "#e7ece6",
+    colorDots: ["#e7ece6", "#cdded0", "#a4c6b2", "#6f9f8b", "#3f7768"],
+    colorSnake: "#3f7768",
+  },
+  "mosaic-dark": {
+    colorBackground: "#101719",
+    colorDotBorder: "#ffffff12",
+    colorEmpty: "#202c2d",
+    colorDots: ["#202c2d", "#2d4a46", "#427166", "#6d9e8e", "#a9d2bd"],
+    colorSnake: "#a9d2bd",
+  },
+};
+
+// aliases：不带后缀的名字指向各自平台的亮色配色
+export const palettes = {
+  ...basePalettes,
+
+  github: basePalettes["github-light"],
+  cnb: basePalettes["cnb-light"],
+  gitlab: basePalettes["gitlab-light"],
+  forgejo: basePalettes["forgejo-light"],
+  codeberg: basePalettes["codeberg-light"],
+  mosaic: basePalettes["mosaic-light"],
+  default: basePalettes["github-light"],
+};

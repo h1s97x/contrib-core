@@ -1,0 +1,151 @@
+import { copyGrid, getColor, isEmpty, isInside, setColorEmpty } from "../types";
+import { getHeadX, getHeadY } from "../types";
+import type { Snake } from "../types";
+import type { Grid, Color, Empty } from "../types";
+import type { Point } from "../types";
+import { createSnake } from "./snake";
+import { createGrid } from "./grid";
+import { h } from "./xml-utils";
+import { minifyCss } from "./css-utils";
+
+export type DrawOptions = {
+  colorDots: Record<Color, string>;
+  colorEmpty: string;
+  colorDotBorder: string;
+  colorSnake: string;
+  /** 由 palette 带入，snake 皮肤不读取，mosaic 用作画布底色 */
+  colorBackground?: string;
+  sizeCell: number;
+  sizeDot: number;
+  sizeDotBorderRadius: number;
+  dark?: {
+    colorDots: Record<Color, string>;
+    colorEmpty: string;
+    colorDotBorder?: string;
+    colorSnake?: string;
+  };
+};
+
+const getCellsFromGrid = ({ width, height }: Grid) =>
+  Array.from({ length: width }, (_, x) =>
+    Array.from({ length: height }, (_, y) => ({ x, y })),
+  ).flat();
+
+const createLivingCells = (
+  grid0: Grid,
+  chain: Snake[],
+  cells: Point[] | null,
+) => {
+  const livingCells: (Point & {
+    t: number | null;
+    color: Color | Empty;
+  })[] = (cells ?? getCellsFromGrid(grid0)).map(({ x, y }) => ({
+    x,
+    y,
+    t: null,
+    color: getColor(grid0, x, y),
+  }));
+
+  const grid = copyGrid(grid0);
+  for (let i = 0; i < chain.length; i++) {
+    const snake = chain[i];
+    const x = getHeadX(snake);
+    const y = getHeadY(snake);
+
+    if (isInside(grid, x, y) && !isEmpty(getColor(grid, x, y))) {
+      setColorEmpty(grid, x, y);
+      const cell = livingCells.find((c) => c.x === x && c.y === y)!;
+      cell.t = i / chain.length;
+    }
+  }
+
+  return livingCells;
+};
+
+export const createSvg = (
+  grid: Grid,
+  cells: Point[] | null,
+  chain: Snake[],
+  drawOptions: DrawOptions,
+  animationOptions: { stepDurationMs: number },
+) => {
+  const { sizeCell, sizeDot } = drawOptions;
+  const width = (grid.width + 2) * sizeCell;
+
+  // 上下留白对称：内容（首行顶部到末行底部）上下各留 2 格
+  const padY = sizeCell * 2;
+  const contentTop = (sizeCell - sizeDot) / 2;
+  const contentBottom = (grid.height - 1) * sizeCell + (sizeCell + sizeDot) / 2;
+  const viewBoxMinY = contentTop - padY;
+  const height = contentBottom - contentTop + padY * 2;
+
+  const duration = animationOptions.stepDurationMs * chain.length;
+
+  const livingCells = createLivingCells(grid, chain, cells);
+
+  const elements = [
+    createGrid(livingCells, drawOptions, duration),
+    createSnake(chain, drawOptions, duration),
+  ];
+
+  const viewBox = [-sizeCell, viewBoxMinY, width, height].join(" ");
+
+  const style =
+    generateColorVar(drawOptions) +
+    elements
+      .map((e) => e.styles)
+      .flat()
+      .join("\n");
+
+  const svg = [
+    h("svg", {
+      viewBox,
+      width,
+      height,
+      xmlns: "http://www.w3.org/2000/svg",
+    }).replace("/>", ">"),
+
+    "<desc>",
+    "Generated with https://github.com/h1s97x/contrib-snake",
+    "</desc>",
+
+    "<style>",
+    optimizeCss(style),
+    "</style>",
+
+    ...elements.map((e) => e.svgElements).flat(),
+
+    "</svg>",
+  ].join("");
+
+  return optimizeSvg(svg);
+};
+
+const optimizeCss = (css: string) => minifyCss(css);
+const optimizeSvg = (svg: string) => svg;
+
+const generateColorVar = (drawOptions: DrawOptions) =>
+  `
+    :root {
+    --cb: ${drawOptions.colorDotBorder};
+    --cs: ${drawOptions.colorSnake};
+    --ce: ${drawOptions.colorEmpty};
+    ${Object.entries(drawOptions.colorDots)
+      .map(([i, color]) => `--c${i}:${color};`)
+      .join("")}
+    }
+    ` +
+  (drawOptions.dark
+    ? `
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --cb: ${drawOptions.dark.colorDotBorder || drawOptions.colorDotBorder};
+        --cs: ${drawOptions.dark.colorSnake || drawOptions.colorSnake};
+        --ce: ${drawOptions.dark.colorEmpty};
+        ${Object.entries(drawOptions.dark.colorDots)
+          .map(([i, color]) => `--c${i}:${color};`)
+          .join("")}
+      }
+    }
+`
+    : "");

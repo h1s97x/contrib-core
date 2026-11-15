@@ -1,0 +1,47 @@
+name: main
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.12
+      - run: bun install
+      - run: bun run type
+      - run: bun run lint
+      - run: bun test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.12
+      - id: generate-snake
+        uses: ./
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/github-contribution-grid-mosaic.svg?renderer=mosaic
+      - name: generate mosaic via the renderer input
+        uses: ./
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          renderer: mosaic
+          outputs: |
+            dist/mosaic-by-input.svg
+      - name: ensure generated files exist
+        run: |
+          test -f dist/github-contribution-grid-snake.svg
+          test -f dist/github-contribution-grid-snake-dark.svg
+          test -f dist/github-contribution-grid-mosaic.svg
+          test -f dist/mosaic-by-input.svg

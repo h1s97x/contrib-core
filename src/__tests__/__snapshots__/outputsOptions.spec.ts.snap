@@ -1,0 +1,82 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`should parse path/to/out.svg 1`] = `
+{
+  "animationOptions": {
+    "stepDurationMs": 100,
+  },
+  "drawOptions": {
+    "colorBackground": "#ffffff",
+    "colorDotBorder": "#1b1f230a",
+    "colorDots": [
+      "#ebedf0",
+      "#9be9a8",
+      "#40c463",
+      "#30a14e",
+      "#216e39",
+    ],
+    "colorEmpty": "#ebedf0",
+    "colorSnake": "purple",
+    "sizeCell": 16,
+    "sizeDot": 12,
+    "sizeDotBorderRadius": 0,
+  },
+  "filename": "path/to/out.svg",
+  "paletteName": "default",
+  "renderer": "snake",
+}
+`;
+
+exports[`should parse /out.svg?color_snake=orange&color_dots=#000,#111,#222,#333,#444 1`] = `
+{
+  "animationOptions": {
+    "stepDurationMs": 100,
+  },
+  "drawOptions": {
+    "colorBackground": "#ffffff",
+    "colorDotBorder": "#1b1f230a",
+    "colorDots": [
+      "#000",
+      "#111",
+      "#222",
+      "#333",
+      "#444",
+    ],
+    "colorEmpty": "#000",
+    "colorSnake": "orange",
+    "sizeCell": 16,
+    "sizeDot": 12,
+    "sizeDotBorderRadius": 0,
+  },
+  "filename": "/out.svg",
+  "paletteName": "default",
+  "renderer": "snake",
+}
+`;
+
+exports[`should parse /out.svg?{"color_snake":"yellow","color_dots":["#000","#111","#222","#333","#444"]} 1`] = `
+{
+  "animationOptions": {
+    "stepDurationMs": 100,
+  },
+  "drawOptions": {
+    "colorBackground": "#ffffff",
+    "colorDotBorder": "#1b1f230a",
+    "colorDots": [
+      "#000",
+      "#111",
+      "#222",
+      "#333",
+      "#444",
+    ],
+    "colorEmpty": "#000",
+    "colorSnake": "yellow",
+    "sizeCell": 16,
+    "sizeDot": 12,
+    "sizeDotBorderRadius": 0,
+  },
+  "filename": "/out.svg",
+  "paletteName": "default",
+  "renderer": "snake",
+}
+`;
