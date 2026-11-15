@@ -51,6 +51,11 @@ for dir in "$ROOT"/shells/contrib-arcade-*; do
   (
     cd "$dir" || exit 1
     if [ ! -d .git ]; then git init -b main -q; fi
+    # 以 CNB 远端 main 为基线：即使本地是刚生成的干净目录（无 .git 历史），
+    # 发布提交也一定是 fast-forward，不会重写分发仓库的历史。
+    if git fetch -q "https://cnb.cool/$CNB_GROUP/$name.git" main 2>/dev/null; then
+      git reset --mixed -q FETCH_HEAD
+    fi
     git add -A
     if ! git diff --cached --quiet; then
       git -c commit.gpgsign=false \
