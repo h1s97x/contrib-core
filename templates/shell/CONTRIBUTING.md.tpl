@@ -1,12 +1,13 @@
-# Contributing to contrib-{{GAME}}
+# Contributing to {{SHELL_NAME}}
 
-This repo is a thin shell. It owns **only** the branding, default inputs,
-issues and maintainers for `{{GAME}}`.
+This repo is a **read-only distribution channel** for `{{GAME}}`. It is
+generated from `templates/shell/` in [`contrib-core`]({{CORE_URL}}); direct
+edits here are overwritten by the next release.
 
 - **Game logic, rendering, themes, data sources, CLI and CI** live in the
-  [core]({{CORE_URL}}). Open gameplay PRs there.
-- **This repo** is the right place for README wording, preview images, issue
-  templates, default `outputs`, and release/permissions for this shell.
+  [core]({{CORE_URL}}). Open issues and pull requests there.
+- **This repo** only carries the generated identity: name, README, default
+  `outputs` and the fixed `renderer`; it has no game code and no CI of its own.
 - For a fork, edit the `uses:` line in `action.yml` to point at your own core
   fork; nothing else needs to change.
 

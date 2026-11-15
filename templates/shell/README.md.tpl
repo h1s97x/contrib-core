@@ -1,5 +1,9 @@
 # {{SHELL_NAME}}
 
+> **Read-only distribution channel.** This repository is generated from
+> [`contrib-core`]({{CORE_URL}}) by the release pipeline. Please open issues
+> and pull requests in the core repository, not here.
+
 {{STATUS_LINE}}
 
 {{SUMMARY}}
