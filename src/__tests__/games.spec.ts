@@ -15,16 +15,12 @@ it("lists exactly the eight arcade games", () => {
     "tetris",
   ]);
   expect(arcadeGames).toHaveLength(8);
-  expect(
-    arcadeGames.filter((g) => g.status === "ready").map((g) => g.name),
-  ).toEqual(["snake"]);
-  expect(pendingGameNames).toHaveLength(7);
+  expect(arcadeGames.every((g) => g.status === "ready")).toBe(true);
+  expect(pendingGameNames).toHaveLength(0);
 });
 
-it("describes planned games instead of reporting them as unknown", () => {
-  expect(() => resolveRenderer("breakout")).toThrow(
-    /registered but not implemented/,
-  );
+it("resolves every game and rejects unknown renderers", () => {
+  for (const name of gameNames) expect(resolveRenderer(name)).toBe(name);
   expect(() => resolveRenderer("tree")).toThrow(/unsupported renderer/);
   expect(getGame("Galaga")?.label).toBe("Galaga");
 });

@@ -28,3 +28,15 @@ export type {
 } from "./renderers/types";
 export { getContribution, platforms } from "./sources";
 export type { Cell, Platform, Source } from "./sources";
+export {
+  createGameRenderer,
+  gameplayFactories,
+  renderGameplay,
+} from "./renderers/gameplay";
+export type {
+  ActorShape,
+  ActorTrack,
+  FrameEvent,
+  Gameplay,
+  GameplayFactory,
+} from "./renderers/gameplay";

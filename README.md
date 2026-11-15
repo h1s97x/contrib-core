@@ -85,14 +85,14 @@ duplicated. The existing `h1s97x/plugins/contrib-snake` repository is the
 
 | Game          | Shell repo (CNB)                          | Status  |
 | ------------- | ----------------------------------------- | ------- |
-| Pac-Man       | `h1s97x/plugins/arcade-pacman`            | planned |
-| Breakout      | `h1s97x/plugins/arcade-breakout`          | planned |
-| Galaga        | `h1s97x/plugins/arcade-galaga`            | planned |
-| Puzzle Bobble | `h1s97x/plugins/arcade-puzzle-bobble`     | planned |
-| Bomberman     | `h1s97x/plugins/arcade-bomberman`         | planned |
-| Minesweeper   | `h1s97x/plugins/arcade-minesweeper`       | planned |
+| Pac-Man       | `h1s97x/plugins/arcade-pacman`            | ready   |
+| Breakout      | `h1s97x/plugins/arcade-breakout`          | ready   |
+| Galaga        | `h1s97x/plugins/arcade-galaga`            | ready   |
+| Puzzle Bobble | `h1s97x/plugins/arcade-puzzle-bobble`     | ready   |
+| Bomberman     | `h1s97x/plugins/arcade-bomberman`         | ready   |
+| Minesweeper   | `h1s97x/plugins/arcade-minesweeper`       | ready   |
 | Snake         | `h1s97x/plugins/contrib-snake` (existing) | ready   |
-| Tetris        | `h1s97x/plugins/arcade-tetris`            | planned |
+| Tetris        | `h1s97x/plugins/arcade-tetris`            | ready   |
 
 `mosaic` stays a skin in the core rather than becoming a ninth shell.
 

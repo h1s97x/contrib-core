@@ -1,4 +1,5 @@
 import { expect, it } from "bun:test";
+import { gameNames } from "../games";
 import { generateAnimation } from "../generate";
 import { parseEntry, parseOutputsOption } from "../outputsOptions";
 import { palettes } from "../palettes";
@@ -35,8 +36,10 @@ const renderOptions = (paletteName: string, drawOptions: DrawOptions) => ({
 const snakeDrawOptions = parseEntry("out.svg")!.drawOptions;
 const mosaicDrawOptions = parseEntry("out.svg?renderer=mosaic")!.drawOptions;
 
-it("registers the available skins", () => {
-  expect(rendererNames).toEqual(["snake", "mosaic"]);
+it("registers the available skins and games", () => {
+  expect(rendererNames).toContain("snake");
+  expect(rendererNames).toContain("mosaic");
+  for (const name of gameNames) expect(rendererNames).toContain(name);
   expect(resolveRenderer()).toBe("snake");
   expect(resolveRenderer("MOSAIC")).toBe("mosaic");
   expect(() => resolveRenderer("tree")).toThrow(/unsupported renderer/);

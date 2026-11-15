@@ -18,42 +18,42 @@ export const arcadeGames = [
   {
     name: "pacman",
     label: "Pac-Man",
-    status: "planned",
+    status: "ready",
     summary: "A Pac-Man eats contribution cells while ghosts give chase.",
     shellRepo: "h1s97x/plugins/arcade-pacman",
   },
   {
     name: "breakout",
     label: "Breakout",
-    status: "planned",
+    status: "ready",
     summary: "A ball bounces around breaking contribution bricks.",
     shellRepo: "h1s97x/plugins/arcade-breakout",
   },
   {
     name: "galaga",
     label: "Galaga",
-    status: "planned",
+    status: "ready",
     summary: "A fighter ship clears the contribution grid with lasers.",
     shellRepo: "h1s97x/plugins/arcade-galaga",
   },
   {
     name: "puzzle-bobble",
     label: "Puzzle Bobble",
-    status: "planned",
+    status: "ready",
     summary: "Colored bubbles pop matching contribution clusters.",
     shellRepo: "h1s97x/plugins/arcade-puzzle-bobble",
   },
   {
     name: "bomberman",
     label: "Bomberman",
-    status: "planned",
+    status: "ready",
     summary: "Bombers blast contribution cells across the grid.",
     shellRepo: "h1s97x/plugins/arcade-bomberman",
   },
   {
     name: "minesweeper",
     label: "Minesweeper",
-    status: "planned",
+    status: "ready",
     summary: "A solver clears safe cells and flags guaranteed mines.",
     shellRepo: "h1s97x/plugins/arcade-minesweeper",
   },
@@ -67,7 +67,7 @@ export const arcadeGames = [
   {
     name: "tetris",
     label: "Tetris",
-    status: "planned",
+    status: "ready",
     summary: "Falling pieces line up with the contribution grid.",
     shellRepo: "h1s97x/plugins/arcade-tetris",
   },
@@ -77,9 +77,10 @@ export type GameName = (typeof arcadeGames)[number]["name"];
 
 export const gameNames = arcadeGames.map((g) => g.name) as GameName[];
 
-export const pendingGameNames = arcadeGames
+// 显式放宽到 GameMeta，保留「未来加入 planned 游戏」的类型空间
+export const pendingGameNames = (arcadeGames as readonly GameMeta[])
   .filter((g) => g.status === "planned")
-  .map((g) => g.name) as string[];
+  .map((g) => g.name);
 
 /** 需要新建仓库的壳（snake 已有 contrib-snake，排除）。 */
 export const newShellNames = arcadeGames

@@ -46,9 +46,9 @@ push_repo() {
     if [ ! -d .git ]; then
       git init -b main -q
     fi
-    # 上次可能在 commit 阶段失败，.git 已存在但没有提交，这里补齐。
-    if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
-      git add .
+    # 首次推送与后续更新走同一条路径：没有改动就跳过提交。
+    git add -A
+    if ! git diff --cached --quiet; then
       # 平台 GPG 签名接口对普通访问令牌不可用，显式免签名提交。
       git -c commit.gpgsign=false \
           -c user.name="${CNB_BUILD_USER:-h1s97x}" \
