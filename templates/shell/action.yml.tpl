@@ -31,7 +31,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: {{CORE_REPO}}@main
+    - uses: {{CORE_REPO}}@{{CORE_REF}}
       with:
         platform: ${{ inputs.platform }}
         user_name: ${{ inputs.user_name }}

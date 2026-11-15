@@ -5,11 +5,11 @@
  * 这份清单来自 src/games.ts 的 shellTargets（要生成哪些壳），
  * 与 src/renderers/index.ts 的渲染器注册表是两件事：其它 contrib 项目
  * 可以直接注册 Renderer，不必出现在这里。
- * snake 壳由现有 contrib-snake 改名而来，不需要新建仓库。
+ * 8 个壳都有独立仓库；发布由 scripts/publish-shells.sh 按 tag 驱动。
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { CORE_REPO, CORE_URL, newShellNames, shellTargets } from "../src/games";
+import { CORE_REPO, CORE_URL, shellTargets } from "../src/games";
 
 const root = process.cwd();
 const templateDir = path.join(root, "templates", "shell");
@@ -20,6 +20,8 @@ const arg = (name: string, fallback: string) =>
 
 const outDir = path.resolve(arg("out", path.join(root, "shells")));
 const owner = arg("owner", "h1s97x");
+// 发布时由 publish-shells.sh 注入不可变 tag；本地开发默认跟随 main。
+const coreRef = arg("core-ref", process.env.CORE_REF ?? "main");
 
 // contrib- 前缀与既有项目一致；arcade 标记这 8 个街机游戏这一组
 const shellName = (game: string) => `contrib-arcade-${game}`;
@@ -57,6 +59,7 @@ for (const game of shellTargets) {
         : "**Status: planned** — the shell, docs and CI are in place, but the game logic is not implemented in core yet.",
     CORE_REPO,
     CORE_URL,
+    CORE_REF: coreRef,
     MIRROR_NOTE:
       "Create this mirror separately to use the shell as a GitHub Action.",
     SHELL_REPO: `${owner}/${name}`,
@@ -76,8 +79,7 @@ for (const game of shellTargets) {
   console.log(`✓ ${target} (${game.status}) → ${game.shellRepo}`);
 }
 
-console.log(`\n${shellTargets.length} shells generated in ${outDir}`);
 console.log(
-  "snake: rename the existing contrib-snake repo, do not create a new one.",
+  `\n${shellTargets.length} shells generated in ${outDir} (core ${coreRef})`,
 );
-console.log(`New repos to create: contrib-core, ${newShellNames.join(", ")}`);
+console.log("Publish them with: CORE_REF=<tag> bash scripts/publish-shells.sh");

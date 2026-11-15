@@ -56,6 +56,22 @@ $:
         - name: push image
           script: docker push $IMAGE_TAG
 
+    # 同一 tag 触发 8 个只读分发壳的发布（幂等，可重跑）
+    - name: publish-shells
+      imports:
+        - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
+      stages:
+        - name: verify
+          image: node:20
+          script: |
+            npm install --silent
+            npx tsc --noEmit -p tsconfig.json
+            npx -y bun test
+        - name: publish
+          image: node:20
+          script: |
+            bash scripts/publish-shells.sh
+
   # 手动触发：从 GitHub 拉取（GitHub → CNB）
   # 使用 tencentcom/git-sync 插件 + sync_mode: pull
   web_trigger_pull_from_github:

@@ -1,7 +1,7 @@
 {
   "name": "contrib-core",
   "description": "Core runtime for contribution-graph SVGs: platform adapters, renderer registry, CLI, Action and CNB plugin",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "private": true,
   "repository": "https://cnb.cool/h1s97x/plugins/contrib-core",
   "main": "src/index.ts",
@@ -17,6 +17,7 @@
   "scripts": {
     "type": "tsc",
     "lint": "prettier -c 'src/**/*.{ts,js,json,md,yml,yaml}' 'scripts/**/*.ts'",
-    "scaffold": "bun scripts/scaffold-shells.ts"
+    "scaffold": "bun scripts/scaffold-shells.ts",
+    "publish": "bash scripts/publish-shells.sh"
   }
 }
